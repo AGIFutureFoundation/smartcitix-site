@@ -1,4 +1,4 @@
-# SmartCiti.X — Trade Craft Academy (smartciti.x.agifuturefoundation.org)
+# SmartCiti.X — Trade Craft Academy (smartcitix.agifuturefoundation.org)
 
 Static site for **SmartCiti.X** — gamified training to enhance robotic and
 human integrations. The Trade Craft Academy: 111 union halls, quests, the
@@ -11,7 +11,7 @@ checks). Powered by AGI Corp. Content reviewed from the
 vercel          # preview deploy
 vercel --prod   # production
 ```
-Then add the custom domain (`smartciti.x.agifuturefoundation.org`) in the
+Then add the custom domain (`smartcitix.agifuturefoundation.org`) in the
 Vercel dashboard (Settings → Domains). DNS is already pointing to Vercel at
 Hostinger — it goes live instantly.
 
