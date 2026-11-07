@@ -69,6 +69,19 @@ check(gated === 1, `expected 1 gated event, got ${gated}`);
 check(stuck.length === 1 && stuck[0] === "learner-a02|skill-sample-002",
   `expected stuck = learner-a02|skill-sample-002, got ${stuck.join(", ")}`);
 
+// Panel controls (2026-11-07): every section.card must be closable /
+// minimisable / resizable, with a global hide-all (button + H key) and a
+// re-open menu. These are static checks on the built index.html.
+const builtHtml = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+for (const needle of [
+  'id="uiToolbar"', 'id="hideAllBtn"', 'id="panelMenuBtn"', 'id="panelMenu"',
+  'id="panelList"', 'setupPanelControls', 'toggleHideAll', 'refreshPanelMenu',
+  'PANEL_SIZE_ORDER', 'ui-hidden', 'panelctl',
+]) check(builtHtml.includes(needle), `index.html missing panel-control piece: ${needle}`);
+check((builtHtml.match(/<section class="card"/g) || []).length === 10,
+  `expected 10 section.card panels, got ${(builtHtml.match(/<section class="card"/g) || []).length}`);
+check(!builtHtml.includes("__SAMPLE_LOG_JSON__"), "index.html still contains the __SAMPLE_LOG_JSON__ placeholder");
+
 if (failures.length) {
   console.error("\nFAILURES:");
   for (const f of failures) console.error(" -", f);

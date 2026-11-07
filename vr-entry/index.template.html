@@ -69,6 +69,29 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 code{background:#0d1730;padding:.1rem .35rem;border-radius:5px}
 .xrstatus{font-weight:700}
 @media(max-width:560px){h1{font-size:1.4rem}.modes{grid-template-columns:1fr}.modebtn{min-height:56px}}
+/* ---- Panel controls: close / minimise / size + hide-all (2026-11-07) ----
+   Every section.card is a panel. Controls are injected by JS (setupPanelControls)
+   so the authored content stays untouched. Panels are in normal flow — they
+   never overlay the view; the floating toolbar is docked bottom-right only. */
+.card{position:relative}
+.panelctl{position:absolute;top:.55rem;right:.55rem;display:flex;gap:.35rem;z-index:2}
+.panelctl button{min-height:44px;min-width:44px;padding:.2rem .5rem;border-radius:9px;border:1px solid var(--line);background:#0d1730;color:var(--ink);font-weight:700;font-size:1rem;line-height:1}
+.panelctl button:hover{border-color:var(--acc)}
+.card.collapsed>:not(h2):not(.panelctl){display:none}
+.card.closed{display:none}
+.card[data-size="s"]{max-width:640px;margin-left:auto;margin-right:auto}
+.card[data-size="m"]{max-width:880px;margin-left:auto;margin-right:auto}
+#uiToolbar{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;pointer-events:none}
+#uiToolbar>*{pointer-events:auto}
+.tb-btn{min-height:48px;border-radius:12px;border:2px solid var(--line);background:#131e33;color:var(--ink);font-weight:700;padding:.6rem .9rem;box-shadow:0 4px 18px rgba(0,0,0,.5)}
+#hideAllBtn[aria-pressed="true"]{background:var(--acc);color:#1a1200;border-color:var(--acc)}
+#panelMenu{display:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;min-width:min(300px,calc(100vw - 24px));max-height:50vh;overflow:auto;box-shadow:0 4px 18px rgba(0,0,0,.5)}
+#panelMenu.open{display:block}
+#panelMenu h3{margin:.1rem 0 .4rem}
+.pm-row{display:flex;justify-content:space-between;gap:.5rem;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--line)}
+.pm-row span{font-size:.9rem}
+.pm-row button{min-height:44px;border-radius:9px;border:1px solid var(--line);background:#0d1730;color:var(--ink);padding:.3rem .7rem;font-weight:700}
+body.ui-hidden section.card{display:none}
 </style>
 </head>
 <body>
@@ -118,7 +141,7 @@ Source: <code>sample-log.json</code> — cohort-sample-01, 20 events, 5 pseudony
 <select id="learnerSel" onchange="renderAll()"></select>
 <span class="mut small">Pseudonymised sample IDs only.</span>
 </p>
-<p class="mut">Skill graph: <strong>3,663 skills · 11 strands × 3 tiers</strong> (fundamentals → applied → mastery). The sample log covers 5 skills in 2 strands — the other 9 strands have no sample events, so they show as “no sample events”, not as zero progress. Strand names for strands 03–11 come from <code>pack/registry/skills.json</code>, which is not in this local set — they are labelled Strand 03…11 here rather than guessed.</p>
+<p class="mut">Skill graph: <strong>3,663 skills · 11 strands × 3 tiers</strong> (fundamentals → applied → mastery). The 11 strand names are the registry strands, verbatim from the SmartCiti.X skill registry (<code>pack/registry/skills.json</code>, via <code>wiki/Skill-Graph.md</code>): coordination, documentation, inspection, layout, leadership, machines, materials, procedure, safety, tools, troubleshooting. The sample log covers 5 skills in 2 sample strands (electrical, plumbing) — those are sample labels, not registry strands — so all 11 registry strands show as “no sample events”, not as zero progress. The per-skill table and the bars below still show the sample strands.</p>
 <div class="graphwrap"><svg id="graph" width="640" height="460" viewBox="0 0 640 460" role="img" aria-label="Skill graph constellation: learner at centre, 11 strand nodes around, three tier rings"></svg></div>
 <div class="legend">
 <span><i class="dot" style="background:#2fbf71"></i>Mastered (demo rule)</span>
@@ -197,15 +220,75 @@ Source: <code>sample-log.json</code> — cohort-sample-01, 20 events, 5 pseudony
 </ul>
 </section>
 
+<!-- ============ ADVISORS ============ -->
+<section class="card" aria-label="The nine advisors">
+<h2>8 · Meet the nine advisors — your coach cast</h2>
+<p>The Holodeck Coach above is a guide on this page. Inside the halls, a different cast waits: nine scripted advisors who stand in the rooms and on the campus green, each one of the Academy's own rigged avatars, and each able to answer exactly <strong>35 questions</strong> between them. An advisor is a scripted guide, not an instructor and not an AI: no model runs behind one, and nothing is generated at view time. An answer is either <strong>say</strong> (written and cited) or <strong>read</strong> (bound to a live record, such as the PPE conditions, a seat rubric, or a hall's rooms). Twenty-one of the 35 topics carry no words. Advisors are not scored, and no grader reads advisor state.</p>
+<table>
+<tr><th>Advisor</th><th>Where they stand</th><th>What they answer</th></tr>
+<tr><td>🧭 Orientation guide</td><td>Hall door</td><td>“What is this hall?”</td></tr>
+<tr><td>🦺 Safety steward</td><td>Safety room</td><td>PPE, hazards, light, air, noise — “Can I refuse the work?”</td></tr>
+<tr><td>🧰 Crib keeper</td><td>Tools room</td><td>Tools and the crib</td></tr>
+<tr><td>📐 Layout hand</td><td>Layout room</td><td>Control points</td></tr>
+<tr><td>🔍 Inspector</td><td>Inspection room</td><td>“Can I talk my way to a pass?”</td></tr>
+<tr><td>📋 Foreman</td><td>Coordination room</td><td>Shift brief, walkaround, hand-offs</td></tr>
+<tr><td>🗂️ Records clerk</td><td>Documentation room</td><td>Progress, certification, school partners</td></tr>
+<tr><td>👷 Operator</td><td>The running seat's own yard</td><td>Task, controls, gauges, rubric, walkaround, reference procedure</td></tr>
+<tr><td>📡 Dispatcher</td><td>Campus green</td><td>Campus districts, other campuses, nearby anchors; 10- and 15-minute walk bands (800 m / 1,200 m)</td></tr>
+</table>
+<p class="small mut">Source: SmartCiti.X <code>wiki/Advisors.md</code> — the Academy's nine scripted guides.</p>
+</section>
+
+<!-- ============ SIMULATORS ============ -->
+<section class="card" aria-label="The eleven simulator stations">
+<h2>9 · The 11 simulator stations</h2>
+<p>Eleven operable training seats stand in the Simulator Yard at the centre of the Holodeck, each with a scripted reference operator. A finished station writes a session-log entry the sequencer can read, so your graph moves when you do.</p>
+<table>
+<tr><th>Station</th><th>Seat</th></tr>
+<tr><td>Tower Crane Lift</td><td>Machine</td></tr>
+<tr><td>Excavator Trench Cut</td><td>Machine</td></tr>
+<tr><td>Forklift Yard Run</td><td>Driving</td></tr>
+<tr><td>Weld Bead Run</td><td>Process</td></tr>
+<tr><td>Scaffold Bay Build</td><td>Process</td></tr>
+<tr><td>Rigging Signal Call</td><td>Process</td></tr>
+<tr><td>Load Chart Judgment</td><td>Process</td></tr>
+<tr><td>Pressure Washer Surface Clean</td><td>Process</td></tr>
+<tr><td>Airless Paint Sprayer Finish</td><td>Process</td></tr>
+<tr><td>Boom Lift Basket Work</td><td>Machine — in-headset control mapping</td></tr>
+<tr><td>Overhead Crane Shop Move</td><td>Machine — in-headset control mapping</td></tr>
+</table>
+<p class="small mut">Source: SmartCiti.X <code>wiki/Simulators.md</code> and <code>sims/</code>. Sims encode pedagogical assumptions — they produce no evidence that the assumptions are true.</p>
+</section>
+
+<!-- ============ BUILDING KIT ============ -->
+<section class="card" aria-label="How the halls are built">
+<h2>10 · How the halls are built — building kit &amp; interiors</h2>
+<p>The halls are assembled from an 18-piece low-poly building vocabulary — 43 primitives (36 boxes + 7 cylinders), 12–72 triangles per piece (median 34; the whole vocabulary 556 triangles). A hall envelope is 12.0 m wide, 6 + (depth % 3) × 0.7 m high, with its door toward local −z. Measured reference: one residential city block, 21,893 triangles / 93 meshes.</p>
+<p><strong>The 18 pieces:</strong> Entrance stoop · Entrance tread · Kerb run · Parapet coping run · Parapet corner block · Eaves gutter · Downpipe run · Downpipe shoe · Wall vent hood · Louvred vent panel · Door awning · Bollard · Wall-mounted hand rail · Sign bracket · Surface conduit run · Meter box · Planter tub · Caged roof ladder.</p>
+<p><strong>Interiors:</strong> six authored custom spaces — a welding bay, a rigging yard, an electrical lab, a scaffold court, a flipped classroom, a crane simulator bay — with floor plans drawn at 40 px/m. Interiors hold 29 props over 7 families, 5,082 instances across 1,221 rooms; wall runs first, then authored islands with a 1.5 m aisle; the 11 room strands mirror the 11 skill strands. Surfaces: 22 floor finishes, and every text-on-plate pair must clear 4.5:1.</p>
+<p class="small mut">Source: SmartCiti.X <code>wiki/Building-Kit.md</code>, <code>wiki/Interiors-Map.md</code>, <code>wiki/Custom-Spaces.md</code>, <code>wiki/Surface-Finishes.md</code>.</p>
+</section>
+
 <div class="banner proposed"><strong>SmartCiti.X is proposed, not formed.</strong> Delaware C-corp recommended; $25M suggested pre-money / $10M tranched raise is illustrative only. Do not present SmartCiti.X as incorporated, funded, or offered. Suggested valuations are never summed into a family total.</div>
 <p class="small mut">Staging only — local files, not pushed, shared, sent, or posted. SmartCiti.X is kept separate from Fellowship, Foundation, WorldForge, and the dental VR track.</p>
 </main>
+
+<!-- Floating panel controls: always reachable, bottom-right (thumb-reachable on mobile). -->
+<div id="uiToolbar" role="region" aria-label="Panel controls">
+<div id="panelMenu" role="group" aria-label="All panels">
+<h3>Panels</h3>
+<div id="panelList"></div>
+<p class="small mut">Closed panels can be reopened here. Press <strong>H</strong> to hide / show all panels.</p>
+</div>
+<button id="panelMenuBtn" class="tb-btn" type="button" aria-expanded="false" aria-controls="panelMenu">▦ Panels</button>
+<button id="hideAllBtn" class="tb-btn" type="button" aria-pressed="false" title="Hide all panels (keyboard: H)">🙈 Hide all panels (H)</button>
+</div>
 
 <script>
 // ---- Sample log, injected at build time from ../sample-log.json ----
 const EVENTS = __SAMPLE_LOG_JSON__;
 // ---- Ground truth ----
-const STRANDS = ["electrical","plumbing","Strand 03","Strand 04","Strand 05","Strand 06","Strand 07","Strand 08","Strand 09","Strand 10","Strand 11"];
+const STRANDS = ["coordination","documentation","inspection","layout","leadership","machines","materials","procedure","safety","tools","troubleshooting"];
 const TIERS = ["fundamentals","applied","mastery"];
 const ZPD_LO = 0.70, ZPD_HI = 0.85, GATE = 0.95, DEMO_MASTERED = 0.60;
 const HOLODECK_URL = "https://agifuturefoundation.github.io/worlds-3d/player.html?world=smartciti-holodeck";
@@ -338,7 +421,7 @@ function renderBars(learner){
     const inZpd = latest.filter(e=>e.mastery>=ZPD_LO && e.mastery<=ZPD_HI).length;
     h += `<p><strong>${strand}</strong> — ${passed}/${evs.length} passed attempts · ${latest.length} skill(s) · ${inZpd} in ZPD band</p><div class="bar"><i style="width:${pct}%"></i></div>`;
   }
-  h += `<p class="small mut">Strands 03–11: no events in the sample log — nothing to bar-chart. Add real strand names from pack/registry/skills.json before presenting this graph as complete.</p>`;
+  h += `<p class="small mut">The 11 registry strands above have no events in the sample log — the log's two strands (electrical, plumbing) are sample labels, not registry strands. The bars above chart the sample strands only; a real log mapped to registry strands would fill the graph.</p>`;
   el.innerHTML = h;
 }
 function renderMeter(skills){
@@ -406,6 +489,96 @@ async function endXR(){ if (xrSession){ try{ await xrSession.end(); }catch(e){} 
     : "WebGL NOT available in this browser. This entry page still works (SVG graph), but the Holodeck 3D player needs a real WebGL browser — try a desktop browser or a real phone before concluding the player is broken.";
 })();
 
+// ---- Panel controls: close / minimise / size + hide-all (2026-11-07) ----
+// Every section.card is a panel. Close (×) hides it; minimise (–/+) collapses
+// it to its heading bar; size cycles Large → Small → Medium → Large.
+// Hide-all (button or H key) is a separate layer: it hides every panel at
+// once without touching each panel's own closed/collapsed state, so a second
+// press restores exactly what was there. The floating toolbar stays visible
+// while all panels are hidden, so panels are always re-openable.
+const PANEL_SIZE_ORDER = ["l", "s", "m"];
+const PANEL_SIZE_LABEL = { s: "S", m: "M", l: "L" };
+function panelSections(){ return [...document.querySelectorAll("main section.card")]; }
+function refreshPanelMenu(){
+  const list = document.getElementById("panelList");
+  if (!list) return;
+  list.innerHTML = "";
+  panelSections().forEach((sec) => {
+    const row = document.createElement("div");
+    row.className = "pm-row";
+    const name = document.createElement("span");
+    name.textContent = sec.dataset.panelName || "Panel";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    const closed = sec.classList.contains("closed");
+    btn.textContent = closed ? "Show" : "Hide";
+    btn.setAttribute("aria-pressed", String(!closed));
+    btn.setAttribute("aria-label", (closed ? "Show panel: " : "Hide panel: ") + name.textContent);
+    btn.onclick = () => { sec.classList.toggle("closed", !closed); refreshPanelMenu(); };
+    row.appendChild(name); row.appendChild(btn);
+    list.appendChild(row);
+  });
+}
+function setupPanelControls(){
+  panelSections().forEach((sec, i) => {
+    const h2 = sec.querySelector("h2");
+    const name = h2 ? h2.textContent.trim() : ("Panel " + (i + 1));
+    sec.dataset.panel = String(i);
+    sec.dataset.panelName = name;
+    sec.dataset.size = "l";
+    const bar = document.createElement("div");
+    bar.className = "panelctl";
+    bar.setAttribute("role", "group");
+    bar.setAttribute("aria-label", "Panel controls for " + name);
+    const mkBtn = (label, title, ariaLabel) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = label; b.title = title;
+      b.setAttribute("aria-label", ariaLabel);
+      bar.appendChild(b);
+      return b;
+    };
+    const sizeBtn = mkBtn("L", "Panel size: large → small → medium → large", "Change size of panel: " + name);
+    sizeBtn.onclick = () => {
+      const cur = sec.dataset.size || "l";
+      const next = PANEL_SIZE_ORDER[(PANEL_SIZE_ORDER.indexOf(cur) + 1) % PANEL_SIZE_ORDER.length];
+      sec.dataset.size = next;
+      sizeBtn.textContent = PANEL_SIZE_LABEL[next];
+      sizeBtn.title = "Panel size: " + next.toUpperCase() + " (tap to change)";
+    };
+    const minBtn = mkBtn("–", "Minimise panel to its heading (tap again to expand)", "Minimise panel: " + name);
+    minBtn.onclick = () => {
+      const collapsed = sec.classList.toggle("collapsed");
+      minBtn.textContent = collapsed ? "+" : "–";
+      minBtn.setAttribute("aria-pressed", String(collapsed));
+      minBtn.title = collapsed ? "Expand panel" : "Minimise panel to its heading (tap again to expand)";
+    };
+    const closeBtn = mkBtn("×", "Close panel (reopen it from the Panels menu, bottom-right)", "Close panel: " + name);
+    closeBtn.onclick = () => { sec.classList.add("closed"); refreshPanelMenu(); };
+    sec.insertBefore(bar, sec.firstChild);
+  });
+  refreshPanelMenu();
+}
+function setHideAll(hidden){
+  document.body.classList.toggle("ui-hidden", hidden);
+  const btn = document.getElementById("hideAllBtn");
+  btn.setAttribute("aria-pressed", String(hidden));
+  btn.textContent = hidden ? "👁 Show all panels (H)" : "🙈 Hide all panels (H)";
+}
+function toggleHideAll(){ setHideAll(!document.body.classList.contains("ui-hidden")); }
+document.getElementById("hideAllBtn").addEventListener("click", toggleHideAll);
+document.getElementById("panelMenuBtn").addEventListener("click", () => {
+  const menu = document.getElementById("panelMenu");
+  const open = menu.classList.toggle("open");
+  document.getElementById("panelMenuBtn").setAttribute("aria-expanded", String(open));
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "h" && e.key !== "H") return;
+  const t = e.target;
+  if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  toggleHideAll();
+});
+
 // ---- Init ----
 (function init(){
   const sel = document.getElementById("learnerSel");
@@ -413,6 +586,7 @@ async function endXR(){ if (xrSession){ try{ await xrSession.end(); }catch(e){} 
     const o = document.createElement("option"); o.value=id; o.textContent=id; sel.appendChild(o);
   });
   sel.value = "learner-a01";
+  setupPanelControls();
   renderAll();
 })();
 </script>

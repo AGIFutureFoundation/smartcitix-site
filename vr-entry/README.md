@@ -40,14 +40,42 @@ path into the Holodeck). It does not rebuild the Holodeck.
    novelty 0.05; ZPD band 0.70–0.85; gate 0.95 + 3 unaided successes; mastery
    sequencer-computed 0–1; pseudonymised learner IDs only.
 
+## Panel controls — close / minimise / size / hide-all (2026-11-07)
+
+Every `section.card` (10 panels) has a control bar, top-right, injected by
+`setupPanelControls()` at init: **× close**, **–/+ minimise** (collapses to the
+heading bar), and **size** cycling Large → Small → Medium → Large (button shows
+the current size letter). A floating toolbar, docked bottom-right
+(thumb-reachable, `env(safe-area-inset-bottom)` aware), holds **🙈 Hide all
+panels (H)** — the `H` key does the same, ignored while focus is in a
+select/input — and a **▦ Panels** menu listing all 10 panels with Show/Hide,
+so a closed panel is always re-openable. Hide-all is a separate layer: it does
+not change any panel's own closed/collapsed state, so a second press restores
+exactly what was there, and the toolbar itself stays visible while all panels
+are hidden. Panels are in normal document flow and never overlay the view.
+`verify.mjs` checks the controls are present in the built `index.html`.
+
+Rebuild note: `build.py` writes `index.html` with Python, which this sandbox
+blocks (exec processes that read workspace files cannot write them — see the
+2026-11-07 build log in the parent report). The template is the source of
+truth; `index.html` was rebuilt via the file tools and verified byte-identical
+to the template except the injected `EVENTS` line (`diff` clean) and
+`EVENTS` deep-equal to the current `sample-log.json`. On a normal machine,
+`python3 build.py` remains the rebuild command.
+
 ## Labelling honesty (held on-page)
 
 - “IWSDK-patterned entry — not built with IWSDK”: no `@iwsdk/core` import anywhere
   on this page. The Holodeck itself is IWSDK-live in worlds-3d; this page links in.
 - “Demo mode — Sample data, not real learners” throughout; 20 events, 5 learners.
-- Strands 03–11 are labelled “Strand 03”…“Strand 11”, not given invented names:
-  the 11 registry strand names live in `pack/registry/skills.json`, which is not in
-  this local set; only electrical + plumbing appear in the sample log.
+- The 11 strand names are the registry strands, verbatim from the SmartCiti.X
+  skill registry (`pack/registry/skills.json`, via `wiki/Skill-Graph.md`):
+  coordination, documentation, inspection, layout, leadership, machines,
+  materials, procedure, safety, tools, troubleshooting. The sample log's two
+  strands (electrical, plumbing) are sample labels, not registry strands, so
+  all 11 registry nodes show “no sample events” until a real log mapped to
+  registry strands exists — the per-skill table and bars still show the sample
+  strands.
 - “Mastered” on this page uses the dashboard demo rule (passed, mastery ≥ 0.60) and
   is labelled as such; the real gate (0.95 + 3 unaided) is shown separately.
 - SmartCiti.X is labelled proposed, not incorporated / funded / offered.
@@ -120,9 +148,12 @@ python3 -m http.server 8000
 
 ## Blocked / open
 
-- 11 strand names: only electrical + plumbing are known locally. Real names need
-  `pack/registry/skills.json` from the SmartCiti.X repo before the graph can show
-  true strand names.
+- 11 strand names: RESOLVED 2026-11-07 (Phase 2) — the 11 registry strand
+  names from `pack/registry/skills.json` via `wiki/Skill-Graph.md` are now in
+  `index.template.html` / `index.html` (see "Labelling honesty" above). Open
+  follow-up: a real cohort log mapped to registry strands, so the graph nodes
+  show real progress instead of “no sample events” (the sample log's
+  electrical/plumbing strands are sample labels, not registry strands).
 - Real cohort log / Real mode: Demo mode only, by design. Real mode needs a validated
   log owner and anonymisation rules (open question 3 in the Phase 1 spec).
 - VR station → skill mapping (Phase 4) is still open — real station IDs are needed
