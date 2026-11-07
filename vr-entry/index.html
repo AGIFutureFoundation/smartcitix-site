@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartCiti.X — Learner VR Entry</title>
+<style>
+:root{--bg:#0b1220;--panel:#131e33;--panel2:#0f1830;--ink:#e8eefc;--mut:#9fb0d0;--acc:#ffb020;--ok:#2fbf71;--warn:#e8a13a;--bad:#e5534b;--line:#26344f}
+:root{--line:#26344f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:1060px;margin:0 auto;padding:0 14px 48px}
+a{color:#7cc4ff}
+h1{font-size:1.7rem;margin:.4rem 0 .2rem}
+h2{font-size:1.25rem;margin:0 0 .5rem}
+h3{font-size:1rem;margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+.banner{border-radius:10px;padding:.8rem 1rem;margin:.7rem 0;font-size:.95rem}
+.banner.demo{background:#3a2f00;border:1px solid #8a6d00;color:#ffe9a8}
+.banner.note{background:#12233d;border:1px solid #2b4a7a;color:#cfe0ff}
+.banner.proposed{background:#2a1414;border:1px solid #7a2b2b;color:#ffc9c9}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:1rem 0}
+.card.flat{background:var(--panel2)}
+.mut{color:var(--mut);font-size:.92rem}
+.small{font-size:.85rem}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;margin:.15rem .2rem .15rem 0;font-size:.85rem;background:#0d1730}
+.pill.on{background:var(--acc);color:#1a1200;border-color:var(--acc);font-weight:700}
+/* mode switcher + big tap targets */
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.6rem 0}
+.modebtn{min-height:64px;border-radius:12px;border:2px solid var(--line);background:#0d1730;color:var(--ink);font-size:1rem;font-weight:650;cursor:pointer;padding:.6rem .4rem}
+.modebtn small{display:block;font-weight:400;color:var(--mut);font-size:.8rem}
+.modebtn[aria-pressed="true"]{border-color:var(--acc);background:#2a2103}
+.bigbtn{display:block;width:100%;text-align:center;background:var(--acc);color:#1a1200;font-weight:800;font-size:1.15rem;border:none;border-radius:12px;padding:1rem .8rem;cursor:pointer;text-decoration:none;min-height:56px}
+.bigbtn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);font-size:1rem;margin-top:.6rem}
+button,select{font:inherit}
+button{cursor:pointer;min-height:44px}
+select{min-height:44px;border-radius:8px;padding:.4rem .6rem;background:#0d1730;color:var(--ink);border:1px solid var(--line);max-width:100%}
+label{font-weight:600}
+/* guided path */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+@media(min-width:720px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{border:2px solid var(--line);border-radius:12px;padding:.9rem;background:#0d1730}
+.step.done{border-color:var(--ok)}
+.step.active{border-color:var(--acc)}
+.step .n{display:inline-block;width:2rem;height:2rem;line-height:2rem;text-align:center;border-radius:50%;background:#22345c;font-weight:800;margin-right:.4rem}
+.step.done .n{background:var(--ok);color:#04160b}
+.step .st{font-weight:700}
+.step button{width:100%;margin-top:.6rem;border-radius:9px;border:1px solid var(--line);background:#1a2c52;color:var(--ink);padding:.6rem}
+/* skill graph */
+.graphwrap{overflow-x:auto}
+svg text{font-family:system-ui,sans-serif}
+.legend span{display:inline-block;margin:.15rem .8rem .15rem 0;font-size:.9rem}
+.dot{display:inline-block;width:.8rem;height:.8rem;border-radius:50%;vertical-align:-1px;margin-right:.3rem}
+.bar{height:14px;border-radius:7px;background:#22345c;overflow:hidden;margin:.2rem 0 .6rem}
+.bar>i{display:block;height:100%;background:var(--ok)}
+.bar>i.zpd{background:var(--acc)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.45rem .6rem;text-align:left;vertical-align:top}
+th{background:#0d1730}
+.meter{position:relative;height:22px;border-radius:11px;background:linear-gradient(90deg,#274060 0%,#274060 70%,#3a2f00 70%,#3a2f00 85%,#274060 85%);margin:.5rem 0}
+.meter .gate{position:absolute;top:-4px;bottom:-4px;left:95%;width:3px;background:var(--bad)}
+.meter .pt{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #111;transform:translate(-50%,-50%)}
+.tag{display:inline-block;border-radius:6px;padding:.05rem .5rem;font-size:.82rem;font-weight:700}
+.tag.ok{background:#0d3d24;color:#8ff0b3}.tag.zpd{background:#3a2f00;color:#ffd76a}.tag.gated{background:#4a1414;color:#ff9d9d}.tag.none{background:#22345c;color:#b9c6e4}
+.coach{display:flex;gap:.9rem;align-items:flex-start}
+.coach .face{flex:0 0 64px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#ffb020,#2fbf71);display:flex;align-items:center;justify-content:center;font-size:1.9rem;font-weight:800;color:#101828}
+details{border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;margin:.5rem 0;background:#0d1730}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+code{background:#0d1730;padding:.1rem .35rem;border-radius:5px}
+.xrstatus{font-weight:700}
+@media(max-width:560px){h1{font-size:1.4rem}.modes{grid-template-columns:1fr}.modebtn{min-height:56px}}
+</style>
+</head>
+<body>
+<main>
+<div class="banner demo"><strong>Demo mode — Sample data, not real learners.</strong><br>
+Source: <code>sample-log.json</code> — cohort-sample-01, 20 events, 5 pseudonymised learners (learner-a01…a05), 2 strands, 2 tiers. No personal data. Figures on this page are computed in-page from that sample log.</div>
+
+<h1>SmartCiti.X — Learner VR Entry</h1>
+<p class="mut">Trade Craft Academy · See your skills, meet your coach, step into the Holodeck. This is the learner-facing door into the 3D world — it does not rebuild the Holodeck.</p>
+<div class="banner note"><strong>IWSDK-patterned entry — not built with IWSDK.</strong> This page uses WebXR / IWSDK-style patterns but does <em>not</em> import <code>@iwsdk/core</code>. The Holodeck itself is IWSDK-live in worlds-3d; this page links you into it. No headset, WebGL, or mobile render on this page has been proven on a real device yet — see “What still needs a real device” below.</div>
+
+<!-- ============ MODES ============ -->
+<section class="card" aria-label="Choose how you are entering">
+<h2>1 · How are you entering?</h2>
+<p class="mut">Pick the device in your hands. The Holodeck player adapts; this page shows you the controls for your mode.</p>
+<div class="modes" role="group" aria-label="Entry mode">
+<button class="modebtn" id="mode-vr" aria-pressed="false" onclick="setMode('vr')">🥽 VR headset<small>Immersive XR · Enter VR in the player</small></button>
+<button class="modebtn" id="mode-desktop" aria-pressed="true" onclick="setMode('desktop')">🖥️ Desktop browser<small>WebGL magic-window · WASD + mouse</small></button>
+<button class="modebtn" id="mode-mobile" aria-pressed="false" onclick="setMode('mobile')">📱 Phone / tablet<small>Touch · tap to interact, joystick</small></button>
+</div>
+<div id="modeHelp" class="card flat"></div>
+<p class="small mut" id="modeDetect"></p>
+</section>
+
+<!-- ============ GUIDED PATH ============ -->
+<section class="card" aria-label="Guided first path">
+<h2>2 · Your first path — 3 steps</h2>
+<p><span id="stepCount">0 of 3 steps done.</span> <span class="mut">Tap each step as you finish it. Step 3 is the door into the Holodeck.</span></p>
+<ol class="steps">
+<li class="step active" id="step1"><span class="n">1</span><span class="st">See your skills</span>
+<p class="small">Look at your skill graph below. Find the amber band — that is your ZPD, where the sequencer wants you working.</p>
+<button onclick="completeStep(1)">✓ I’ve seen my skills</button></li>
+<li class="step" id="step2"><span class="n">2</span><span class="st">Meet your coach</span>
+<p class="small">Read what your Holodeck Coach sees and what it recommends next. The coach is a guide on this page, not a live agent.</p>
+<button onclick="completeStep(2)">✓ I’ve met my coach</button></li>
+<li class="step" id="step3"><span class="n">3</span><span class="st">Enter the Holodeck</span>
+<p class="small">Step into the SmartCiti.X Holodeck (S10) in worlds-3d — trade halls, stations, and your next skill in 3D.</p>
+<button onclick="completeStep(3)">✓ I’m ready — take me there ↓</button></li>
+</ol>
+</section>
+
+<!-- ============ SKILL GRAPH ============ -->
+<section class="card" aria-label="Skill graph overview">
+<h2>3 · Your skill graph — where you are at a glance</h2>
+<p>
+<label for="learnerSel">Learner (sample): </label>
+<select id="learnerSel" onchange="renderAll()"></select>
+<span class="mut small">Pseudonymised sample IDs only.</span>
+</p>
+<p class="mut">Skill graph: <strong>3,663 skills · 11 strands × 3 tiers</strong> (fundamentals → applied → mastery). The sample log covers 5 skills in 2 strands — the other 9 strands have no sample events, so they show as “no sample events”, not as zero progress. Strand names for strands 03–11 come from <code>pack/registry/skills.json</code>, which is not in this local set — they are labelled Strand 03…11 here rather than guessed.</p>
+<div class="graphwrap"><svg id="graph" width="640" height="460" viewBox="0 0 640 460" role="img" aria-label="Skill graph constellation: learner at centre, 11 strand nodes around, three tier rings"></svg></div>
+<div class="legend">
+<span><i class="dot" style="background:#2fbf71"></i>Mastered (demo rule)</span>
+<span><i class="dot" style="background:#ffb020"></i>In progress / in ZPD band</span>
+<span><i class="dot" style="background:#e5534b"></i>Gated</span>
+<span><i class="dot" style="background:#5a6b8c"></i>No sample events</span>
+</div>
+<p class="small mut">Status is text-labelled on every node as well as coloured — colour is never the only signal. “Mastered” here uses the dashboard demo rule (passed, mastery ≥ 0.60). The real gate is stricter: mastery ≥ 0.95 plus 3 unaided successes — see the sequencer panel below.</p>
+<div id="strandBars"></div>
+<h3>Mastery meter — your skills against the ZPD band</h3>
+<p class="small mut">Amber band = ZPD 0.70–0.85 (the sequencer’s sweet spot). Red line = gate at 0.95. Dots = this learner’s latest mastery per skill in the sample log.</p>
+<div class="meter" id="meter"><div class="gate" title="Gate 0.95"></div></div>
+<div id="skillTable"></div>
+</section>
+
+<!-- ============ COACH ============ -->
+<section class="card" aria-label="Holodeck coach">
+<h2>4 · Meet your coach</h2>
+<div class="coach">
+<div class="face" aria-hidden="true">C</div>
+<div>
+<p><strong>Holodeck Coach</strong> <span class="tag zpd">GUIDE — ON THIS PAGE</span></p>
+<p id="coachLine">…</p>
+<p><strong>Next recommended:</strong> <span id="coachNext">…</span></p>
+<p class="small mut">Recommendation is computed in-page from the sample log using the sequencer’s published weights (below) — it is a demo recommendation, not a live sequencer call. The coach is not a live agent and not a seated steward: the Omega Hive SmartCiti Agents registry is 0/44 seated.</p>
+<div>
+<button onclick="coachSay('zpd')">What is my ZPD?</button>
+<button onclick="coachSay('gate')">What is a gate?</button>
+<button onclick="coachSay('holodeck')">What will I do in the Holodeck?</button>
+</div>
+<p id="coachSay" class="small" style="margin-top:.6rem"></p>
+</div>
+</div>
+</section>
+
+<!-- ============ HOLODECK ENTRY ============ -->
+<section class="card" aria-label="Enter the Holodeck">
+<h2>5 · Enter the Holodeck</h2>
+<p>The SmartCiti.X Holodeck (S10) lives in worlds-3d and is already IWSDK-live there — trade halls including Ironworkers, Welding Trades, Boilermakers and Millwrights. This page does not rebuild it; the button below opens the live 3D player.</p>
+<a class="bigbtn" id="holodeckBtn" href="https://agifuturefoundation.github.io/worlds-3d/player.html?world=smartciti-holodeck" target="_blank" rel="noopener" onclick="completeStep(3)">▶ &nbsp;Enter the Holodeck — worlds-3d player</a>
+<a class="bigbtn ghost" href="https://agifuturefoundation.github.io/worlds-3d/" target="_blank" rel="noopener">Open the worlds-3d lobby instead</a>
+<p class="small mut">Player URL pattern verified in the worlds-3d IWSDK staging (<code>player.html?world=smartciti-holodeck</code>). If the live player does not load, the lobby link is the fallback — do not assume a failed load means the world is gone.</p>
+<div id="modeControls" class="card flat"></div>
+<h3>Try an immersive entry from this page (WebXR)</h3>
+<p class="small">IWSDK-patterned WebXR — no <code>@iwsdk/core</code> in this page. Asks the browser for an <code>immersive-vr</code> session if one is available.</p>
+<button id="xrBtn" onclick="tryXR()">Try immersive entry (WebXR)</button>
+<button id="xrEnd" onclick="endXR()" disabled>End XR session</button>
+<p class="small"><span class="xrstatus" id="xrStatus">WebXR not checked yet.</span></p>
+<h3>WebGL check (desktop / mobile browser)</h3>
+<p class="small"><span id="webglStatus">Checking…</span><br>
+<span class="mut">This entry page itself needs no WebGL — the graph above is SVG, so it works even where WebGL is missing. The Holodeck 3D player does need WebGL. If this browser reports no WebGL, that does not prove a real phone or desktop browser lacks it: the cloud browser used to build this page has no WebGL at all.</span></p>
+</section>
+
+<!-- ============ SEQUENCER ============ -->
+<section class="card" aria-label="How the sequencer works">
+<h2>6 · How your next skill is chosen (sequencer ACP-15)</h2>
+<p class="mut">Mastery is computed by the sequencer (0–1), never hand-entered. These are the published rules this entry follows:</p>
+<table>
+<tr><th>Rule</th><th>Value</th><th>What it means for you</th></tr>
+<tr><td>Sequencer weights</td><td>ZPD 0.45 · review 0.25 · leverage 0.15 · modality 0.10 · novelty 0.05</td><td>Skills just inside your reach count most.</td></tr>
+<tr><td>ZPD band</td><td>mastery 0.70–0.85</td><td>Not too easy, not too hard — the amber band on your graph.</td></tr>
+<tr><td>Gate</td><td>mastery ≥ 0.95 + 3 unaided successes</td><td>A gate only opens when you can do it cold, three times.</td></tr>
+<tr><td>Mastery</td><td>0–1, sequencer-computed</td><td>One number per skill; a single pass does not master a skill.</td></tr>
+<tr><td>Learner IDs</td><td>pseudonymised only</td><td>No names or emails in any dashboard or log shown here.</td></tr>
+</table>
+<p class="small mut">Full contract: <a href="../learner-progress-contract.json">learner-progress-contract.json</a> · Full dashboard: <a href="../dashboard-v2-demo.html">dashboard-v2-demo.html</a> · Sample log: <a href="../sample-log.json">sample-log.json</a></p>
+</section>
+
+<!-- ============ VERIFICATION ============ -->
+<section class="card" aria-label="Verification status">
+<h2>7 · What was verified here — and what still needs a real device</h2>
+<ul>
+<li><strong>Verified locally (2026-11-07):</strong> sample log validates against the Phase 1 contract (see <code>verify.mjs</code>); dashboard figures recompute from the same log; Holodeck world file and <code>player.html?world=smartciti-holodeck</code> pattern read in the worlds-3d IWSDK staging; touch joystick + Jump/Interact buttons read in the staging <code>player.html</code> (lines 45–46) and documented in <code>src/player.js</code> (“WASD / arrows, Space, Shift, touch joystick … Quest headset (thumbstick / teleport, ray select, grab)”).</li>
+<li><strong>NOT verified here:</strong> no real mobile render, no real WebGL render, no real Quest headset test. The cloud browser used to build this page has no WebGL, so a mobile/WebGL render cannot be proven in this environment.</li>
+<li><strong>Still needs Mike’s device:</strong> open this page on a real phone (touch, layout, load time); open the Holodeck link in a real desktop WebGL browser; enter VR on a real Quest and confirm the session, teleport, and station interaction.</li>
+</ul>
+</section>
+
+<div class="banner proposed"><strong>SmartCiti.X is proposed, not formed.</strong> Delaware C-corp recommended; $25M suggested pre-money / $10M tranched raise is illustrative only. Do not present SmartCiti.X as incorporated, funded, or offered. Suggested valuations are never summed into a family total.</div>
+<p class="small mut">Staging only — local files, not pushed, shared, sent, or posted. SmartCiti.X is kept separate from Fellowship, Foundation, WorldForge, and the dental VR track.</p>
+</main>
+
+<script>
+// ---- Sample log, injected at build time from ../sample-log.json ----
+const EVENTS = [{"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-001", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 0, "learner_id": "learner-a01", "mastery": 0.65, "outcome": "passed", "session_id": "sess-01", "skill_id": "skill-sample-001", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-20T15:00:00Z", "zpd_level": 3}, {"attempts": 2, "cohort_id": "cohort-sample-01", "event_id": "evt-002", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 1, "learner_id": "learner-a01", "mastery": 0.72, "outcome": "passed", "session_id": "sess-01", "skill_id": "skill-sample-002", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-20T15:20:00Z", "zpd_level": 3}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-003", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 2, "learner_id": "learner-a01", "mastery": 0.4, "outcome": "failed", "session_id": "sess-02", "skill_id": "skill-sample-003", "source": "web", "strand": "electrical", "tier": "applied", "timestamp": "2026-10-21T15:00:00Z", "zpd_level": 3}, {"attempts": 2, "cohort_id": "cohort-sample-01", "event_id": "evt-004", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 1, "learner_id": "learner-a01", "mastery": 0.68, "outcome": "passed", "session_id": "sess-02", "skill_id": "skill-sample-003", "source": "web", "strand": "electrical", "tier": "applied", "timestamp": "2026-10-21T15:30:00Z", "zpd_level": 4}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-005", "gate_status": "blocked", "hall_id": "hall-sample-02", "hints_used": 0, "learner_id": "learner-a01", "mastery": 0.3, "outcome": "gated", "session_id": "sess-03", "skill_id": "skill-sample-004", "source": "campus_3d", "strand": "plumbing", "tier": "fundamentals", "timestamp": "2026-10-22T15:00:00Z", "zpd_level": 3}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-006", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 0, "learner_id": "learner-a02", "mastery": 0.8, "outcome": "passed", "session_id": "sess-04", "skill_id": "skill-sample-001", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-20T16:00:00Z", "zpd_level": 4}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-007", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 2, "learner_id": "learner-a02", "mastery": 0.35, "outcome": "failed", "session_id": "sess-04", "skill_id": "skill-sample-002", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-20T16:20:00Z", "zpd_level": 4}, {"attempts": 2, "cohort_id": "cohort-sample-01", "event_id": "evt-008", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 2, "learner_id": "learner-a02", "mastery": 0.38, "outcome": "failed", "session_id": "sess-05", "skill_id": "skill-sample-002", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-21T16:00:00Z", "zpd_level": 4}, {"attempts": 3, "cohort_id": "cohort-sample-01", "event_id": "evt-009", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 3, "learner_id": "learner-a02", "mastery": 0.42, "outcome": "failed", "session_id": "sess-05", "skill_id": "skill-sample-002", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-21T16:30:00Z", "zpd_level": 4}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-010", "gate_status": "open", "hall_id": "hall-sample-02", "hints_used": 0, "learner_id": "learner-a02", "mastery": 0.7, "outcome": "passed", "session_id": "sess-06", "skill_id": "skill-sample-004", "source": "web", "strand": "plumbing", "tier": "fundamentals", "timestamp": "2026-10-22T16:00:00Z", "zpd_level": 4}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-011", "gate_status": "open", "hall_id": "hall-sample-02", "hints_used": 0, "learner_id": "learner-a03", "mastery": 0.75, "outcome": "passed", "session_id": "sess-07", "skill_id": "skill-sample-004", "source": "web", "strand": "plumbing", "tier": "fundamentals", "timestamp": "2026-10-20T14:00:00Z", "zpd_level": 2}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-012", "gate_status": "passed", "hall_id": "hall-sample-02", "hints_used": 0, "learner_id": "learner-a03", "mastery": 0.82, "outcome": "passed", "session_id": "sess-07", "skill_id": "skill-sample-005", "source": "web", "strand": "plumbing", "tier": "applied", "timestamp": "2026-10-20T14:30:00Z", "zpd_level": 3}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-013", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 1, "learner_id": "learner-a03", "mastery": 0.66, "outcome": "passed", "session_id": "sess-08", "skill_id": "skill-sample-001", "source": "campus_3d", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-21T14:00:00Z", "zpd_level": 3}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-014", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 1, "learner_id": "learner-a04", "mastery": 0.28, "outcome": "failed", "session_id": "sess-09", "skill_id": "skill-sample-001", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-20T17:00:00Z", "zpd_level": 2}, {"attempts": 2, "cohort_id": "cohort-sample-01", "event_id": "evt-015", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 1, "learner_id": "learner-a04", "mastery": 0.64, "outcome": "passed", "session_id": "sess-10", "skill_id": "skill-sample-001", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-21T17:00:00Z", "zpd_level": 2}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-016", "gate_status": "open", "hall_id": "hall-sample-02", "hints_used": 2, "learner_id": "learner-a04", "mastery": 0.45, "outcome": "failed", "session_id": "sess-11", "skill_id": "skill-sample-005", "source": "vr_yard", "station_id": "station-sample-01", "strand": "plumbing", "tier": "applied", "timestamp": "2026-10-22T17:00:00Z", "zpd_level": 3}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-017", "gate_status": "open", "hall_id": "hall-sample-02", "hints_used": 0, "learner_id": "learner-a05", "mastery": 0.71, "outcome": "passed", "session_id": "sess-12", "skill_id": "skill-sample-004", "source": "web", "strand": "plumbing", "tier": "fundamentals", "timestamp": "2026-10-20T13:00:00Z", "zpd_level": 3}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-018", "gate_status": "passed", "hall_id": "hall-sample-02", "hints_used": 0, "learner_id": "learner-a05", "mastery": 0.78, "outcome": "passed", "session_id": "sess-13", "skill_id": "skill-sample-005", "source": "web", "strand": "plumbing", "tier": "applied", "timestamp": "2026-10-21T13:00:00Z", "zpd_level": 3}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-019", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 0, "learner_id": "learner-a05", "mastery": 0.74, "outcome": "passed", "session_id": "sess-14", "skill_id": "skill-sample-003", "source": "web", "strand": "electrical", "tier": "applied", "timestamp": "2026-10-22T13:00:00Z", "zpd_level": 4}, {"attempts": 1, "cohort_id": "cohort-sample-01", "event_id": "evt-020", "gate_status": "open", "hall_id": "hall-sample-01", "hints_used": 0, "learner_id": "learner-a05", "mastery": 0.69, "outcome": "passed", "session_id": "sess-14", "skill_id": "skill-sample-002", "source": "web", "strand": "electrical", "tier": "fundamentals", "timestamp": "2026-10-22T13:30:00Z", "zpd_level": 4}];
+// ---- Ground truth ----
+const STRANDS = ["electrical","plumbing","Strand 03","Strand 04","Strand 05","Strand 06","Strand 07","Strand 08","Strand 09","Strand 10","Strand 11"];
+const TIERS = ["fundamentals","applied","mastery"];
+const ZPD_LO = 0.70, ZPD_HI = 0.85, GATE = 0.95, DEMO_MASTERED = 0.60;
+const HOLODECK_URL = "https://agifuturefoundation.github.io/worlds-3d/player.html?world=smartciti-holodeck";
+
+// ---- Pure functions: same log in, same figures out ----
+function latestPerSkill(events, learner){
+  const m = new Map();
+  for (const e of events.filter(x=>x.learner_id===learner)){
+    const k = e.skill_id;
+    if (!m.has(k) || e.timestamp > m.get(k).timestamp) m.set(k, e);
+  }
+  return [...m.values()];
+}
+function skillStatus(e){
+  if (e.gate_status === "blocked" || e.outcome === "gated") return "gated";
+  if (e.outcome === "passed" && e.mastery >= DEMO_MASTERED) return "mastered";
+  if (e.mastery >= ZPD_LO && e.mastery <= ZPD_HI) return "zpd";
+  return "progress";
+}
+function nextRecommended(events, learner){
+  const skills = latestPerSkill(events, learner).filter(e=>e.gate_status!=="blocked" && e.outcome!=="gated");
+  if (!skills.length) return null;
+  const inBand = skills.filter(e=>e.mastery>=ZPD_LO && e.mastery<=ZPD_HI);
+  const pool = inBand.length ? inBand : skills;
+  pool.sort((a,b)=>a.mastery-b.mastery || a.attempts-b.attempts);
+  return pool[0];
+}
+function strandStatus(events, learner, strand){
+  const evs = events.filter(e=>e.learner_id===learner && e.strand===strand);
+  if (!evs.length) return {state:"none", label:"No sample events"};
+  const latest = latestPerSkill(evs, learner);
+  if (latest.some(e=>skillStatus(e)==="gated")) return {state:"gated", label:"Gated — a gate is blocked"};
+  if (latest.every(e=>skillStatus(e)==="mastered")) return {state:"mastered", label:"Mastered (demo rule)"};
+  if (latest.some(e=>skillStatus(e)==="zpd")) return {state:"zpd", label:"In progress — in your ZPD band"};
+  return {state:"progress", label:"In progress"};
+}
+
+// ---- Steps ----
+const done = {1:false, 2:false, 3:false};
+function completeStep(n){
+  done[n]=true;
+  document.getElementById("step"+n).classList.add("done");
+  document.getElementById("step"+n).classList.remove("active");
+  const next = document.getElementById("step"+(n+1));
+  if (next) next.classList.add("active");
+  const c = Object.values(done).filter(Boolean).length;
+  document.getElementById("stepCount").textContent = c+" of 3 steps done."+(c===3?" You’re ready — enter the Holodeck below.":"");
+}
+
+// ---- Modes ----
+const MODE_HELP = {
+  vr: "<strong>VR headset mode.</strong> In the Holodeck player, use the <strong>Enter VR</strong> button when a headset is connected — thumbstick / teleport to move, ray select, grab to interact. On this page, the “Try immersive entry (WebXR)” button below asks your browser for an immersive-vr session. If nothing happens, your browser or device has no WebXR session to give — that is a device fact, not a page failure.",
+  desktop: "<strong>Desktop browser mode.</strong> The Holodeck player runs as a WebGL magic-window: <strong>WASD / arrows</strong> to move, <strong>mouse</strong> to look, <strong>Space</strong> jump, <strong>Shift</strong> run. This entry page needs no WebGL — the skill graph above is SVG. If your desktop browser reports no WebGL below, try a real WebGL browser before concluding the player is broken.",
+  mobile: "<strong>Phone / tablet mode.</strong> Everything on this page is tap-to-interact with 44px+ touch targets and no heavy assets. In the Holodeck player, use the on-screen <strong>touch joystick</strong> to move and the <strong>Jump / Interact</strong> buttons (verified present in the worlds-3d IWSDK staging player). Pinch/scroll normally on this page — nothing here hijacks touch."
+};
+const MODE_CONTROLS = {
+  vr: "Headset controls in the Holodeck player: thumbstick / teleport · ray select · grab. (From worlds-3d IWSDK staging, src/player.js.)",
+  desktop: "Desktop controls in the Holodeck player: WASD / arrows move · mouse look · Space jump · Shift run.",
+  mobile: "Mobile controls in the Holodeck player: touch joystick move · Jump button · Interact button. (Verified in worlds-3d IWSDK staging player.html.)"
+};
+let mode = "desktop";
+function setMode(m){
+  mode = m;
+  for (const k of ["vr","desktop","mobile"])
+    document.getElementById("mode-"+k).setAttribute("aria-pressed", String(k===m));
+  document.getElementById("modeHelp").innerHTML = MODE_HELP[m];
+  document.getElementById("modeControls").innerHTML = "<strong>Your controls:</strong> "+MODE_CONTROLS[m];
+}
+(function detectMode(){
+  const touch = ("ontouchstart" in window) || navigator.maxTouchPoints > 0;
+  const xr = !!navigator.xr;
+  document.getElementById("modeDetect").textContent =
+    "Detected on this device: " + (touch ? "touch screen present" : "no touch screen detected") + " · " +
+    (xr ? "navigator.xr is present (WebXR API exists here)" : "no navigator.xr in this browser") +
+    ". Suggested mode is a suggestion only — pick whichever device you are actually holding.";
+  if (touch && window.innerWidth < 820) setMode("mobile");
+  else if (xr) setMode("vr");
+  else setMode("desktop");
+})();
+
+// ---- Rendering ----
+function currentLearner(){ return document.getElementById("learnerSel").value; }
+function renderAll(){
+  const learner = currentLearner();
+  const skills = latestPerSkill(EVENTS, learner);
+  renderGraph(learner, skills);
+  renderBars(learner);
+  renderMeter(skills);
+  renderTable(learner, skills);
+  renderCoach(learner, skills);
+}
+function renderGraph(learner, skills){
+  const svg = document.getElementById("graph");
+  const cx=320, cy=225, R=170;
+  const colors = {mastered:"#2fbf71", zpd:"#ffb020", gated:"#e5534b", progress:"#7cc4ff", none:"#5a6b8c"};
+  let s = "";
+  // tier rings
+  [[62,"fundamentals"],[112,"applied"],[170,"mastery"]].forEach(([r,label],i)=>{
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#26344f" stroke-width="1" stroke-dasharray="4 4"/>`;
+    s += `<text x="${cx+6}" y="${cy-r+14}" fill="#9fb0d0" font-size="11">${label}</text>`;
+  });
+  // spokes + strand nodes
+  STRANDS.forEach((strand,i)=>{
+    const a = -Math.PI/2 + i*(2*Math.PI/STRANDS.length);
+    const x = cx + R*Math.cos(a), y = cy + R*Math.sin(a);
+    const st = strandStatus(EVENTS, learner, strand);
+    const col = colors[st.state] || colors.none;
+    s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#22345c" stroke-width="1"/>`;
+    s += `<circle cx="${x}" cy="${y}" r="26" fill="${col}" fill-opacity="0.25" stroke="${col}" stroke-width="2"/>`;
+    s += `<text x="${x}" y="${y-32}" fill="#e8eefc" font-size="11" text-anchor="middle">${strand}</text>`;
+    s += `<text x="${x}" y="${y+4}" fill="#e8eefc" font-size="10" text-anchor="middle">${st.state==="none"?"—":st.state.toUpperCase()}</text>`;
+    s += `<text x="${x}" y="${y+40}" fill="#9fb0d0" font-size="10" text-anchor="middle">${st.state==="none"?"no sample events":st.label.split("—")[0].trim()}</text>`;
+  });
+  // centre learner node
+  const mastered = skills.filter(e=>skillStatus(e)==="mastered").length;
+  s += `<circle cx="${cx}" cy="${cy}" r="40" fill="#ffb020" stroke="#fff" stroke-width="2"/>`;
+  s += `<text x="${cx}" y="${cy-4}" fill="#1a1200" font-size="12" font-weight="700" text-anchor="middle">YOU</text>`;
+  s += `<text x="${cx}" y="${cy+13}" fill="#1a1200" font-size="10" text-anchor="middle">${learner}</text>`;
+  s += `<text x="${cx}" y="${cy+58}" fill="#9fb0d0" font-size="11" text-anchor="middle">${skills.length} skills in sample · ${mastered} mastered (demo rule)</text>`;
+  svg.innerHTML = s;
+}
+function renderBars(learner){
+  const el = document.getElementById("strandBars");
+  let h = "<h3>Progress by strand (sample log only)</h3>";
+  for (const strand of ["electrical","plumbing"]){
+    const evs = EVENTS.filter(e=>e.learner_id===learner && e.strand===strand);
+    const passed = evs.filter(e=>e.outcome==="passed").length;
+    const pct = evs.length ? Math.round(100*passed/evs.length) : 0;
+    const latest = latestPerSkill(evs, learner);
+    const inZpd = latest.filter(e=>e.mastery>=ZPD_LO && e.mastery<=ZPD_HI).length;
+    h += `<p><strong>${strand}</strong> — ${passed}/${evs.length} passed attempts · ${latest.length} skill(s) · ${inZpd} in ZPD band</p><div class="bar"><i style="width:${pct}%"></i></div>`;
+  }
+  h += `<p class="small mut">Strands 03–11: no events in the sample log — nothing to bar-chart. Add real strand names from pack/registry/skills.json before presenting this graph as complete.</p>`;
+  el.innerHTML = h;
+}
+function renderMeter(skills){
+  const m = document.getElementById("meter");
+  m.querySelectorAll(".pt").forEach(n=>n.remove());
+  skills.forEach(e=>{
+    const d = document.createElement("div");
+    d.className="pt"; d.style.left=(e.mastery*100)+"%";
+    d.title = e.skill_id+" — mastery "+e.mastery+" ("+e.strand+", "+e.tier+")";
+    m.appendChild(d);
+  });
+}
+function renderTable(learner, skills){
+  const rows = skills.map(e=>{
+    const st = skillStatus(e);
+    const tag = st==="mastered"?'<span class="tag ok">MASTERED (demo)</span>'
+      : st==="gated"?'<span class="tag gated">GATED</span>'
+      : st==="zpd"?'<span class="tag zpd">IN ZPD 0.70–0.85</span>'
+      :'<span class="tag none">IN PROGRESS</span>';
+    const gateReady = (e.mastery>=GATE) ? "gate-ready on mastery (needs 3 unaided successes — not shown in sample)" : "gate needs mastery ≥ 0.95 + 3 unaided successes";
+    return `<tr><td>${e.skill_id}</td><td>${e.strand} · ${e.tier}</td><td>${e.mastery.toFixed(2)}</td><td>${e.attempts} attempt(s), ${e.hints_used} hint(s)</td><td>${tag}<br><span class="small mut">${gateReady}</span></td></tr>`;
+  }).join("");
+  document.getElementById("skillTable").innerHTML =
+    `<table><tr><th>Skill</th><th>Strand · tier</th><th>Mastery</th><th>Attempts</th><th>Status</th></tr>${rows||'<tr><td colspan="5">No sample events for this learner.</td></tr>'}</table>`;
+}
+function renderCoach(learner, skills){
+  const next = nextRecommended(EVENTS, learner);
+  const inZpd = skills.filter(e=>e.mastery>=ZPD_LO && e.mastery<=ZPD_HI).length;
+  const gated = skills.filter(e=>skillStatus(e)==="gated").length;
+  document.getElementById("coachLine").textContent =
+    `Hello, ${learner}. I can see ${skills.length} skill(s) in your sample log, ${inZpd} sitting in your ZPD band (0.70–0.85) and ${gated} gated. Your next step is one skill at a time, inside the band — that is where you learn fastest.`;
+  document.getElementById("coachNext").textContent = next
+    ? `${next.skill_id} (${next.strand} · ${next.tier}) — latest mastery ${next.mastery.toFixed(2)}, ${next.attempts} attempt(s). Practice it in the Holodeck, then come back and check your graph.`
+    : "No recommendation in this sample — nothing in your log is currently in the ZPD band.";
+}
+function coachSay(topic){
+  const el = document.getElementById("coachSay");
+  if (topic==="zpd") el.textContent = "Coach: Your ZPD — zone of proximal development — is mastery 0.70–0.85. Below 0.70 the skill still needs teaching; above 0.85 you are nearly there and the sequencer will start reviewing it instead of drilling it. The amber band on your graph is that zone.";
+  if (topic==="gate") el.textContent = "Coach: A gate opens only at mastery 0.95 plus 3 unaided successes — three times doing it cold, no hints. A single pass never masters a skill. If a skill shows GATED, its prerequisites come first.";
+  if (topic==="holodeck") el.textContent = "Coach: In the Holodeck you walk the trade halls — Ironworkers, Welding, Boilermakers, Millwrights — and work stations matched to your skills. A finished station writes a session-log entry the sequencer can read, so your graph moves when you do.";
+}
+
+// ---- WebXR (IWSDK-patterned, no @iwsdk/core) ----
+let xrSession = null;
+async function tryXR(){
+  const st = document.getElementById("xrStatus");
+  if (!("xr" in navigator)){ st.textContent = "No WebXR in this browser (navigator.xr missing). Use a real headset browser or the Holodeck link above."; return; }
+  try{
+    const ok = await navigator.xr.isSessionSupported("immersive-vr");
+    if (!ok){ st.textContent = "This browser has WebXR but no immersive-vr session is available here (no headset connected). The Holodeck link above is the way in."; return; }
+    xrSession = await navigator.xr.requestSession("immersive-vr", {optionalFeatures:["local-floor","bounded-floor"]});
+    st.textContent = "Immersive VR session active. (Entry-page session only — the Holodeck has its own Enter VR.)";
+    document.getElementById("xrEnd").disabled = false;
+    xrSession.addEventListener("end", ()=>{ xrSession=null; st.textContent="XR session ended."; document.getElementById("xrEnd").disabled=true; });
+  }catch(err){ st.textContent = "WebXR session could not start: "+(err && err.message ? err.message : err); }
+}
+async function endXR(){ if (xrSession){ try{ await xrSession.end(); }catch(e){} } }
+
+// ---- WebGL probe ----
+(function webglProbe(){
+  const el = document.getElementById("webglStatus");
+  let ctx = null, kind = "";
+  try{ const c = document.createElement("canvas"); ctx = c.getContext("webgl2"); if (ctx) kind="WebGL2"; else { ctx = c.getContext("webgl"); if (ctx) kind="WebGL1"; } }catch(e){}
+  el.textContent = ctx ? ("WebGL available in this browser: "+kind+". The Holodeck player should be able to render here.")
+    : "WebGL NOT available in this browser. This entry page still works (SVG graph), but the Holodeck 3D player needs a real WebGL browser — try a desktop browser or a real phone before concluding the player is broken.";
+})();
+
+// ---- Init ----
+(function init(){
+  const sel = document.getElementById("learnerSel");
+  [...new Set(EVENTS.map(e=>e.learner_id))].sort().forEach(id=>{
+    const o = document.createElement("option"); o.value=id; o.textContent=id; sel.appendChild(o);
+  });
+  sel.value = "learner-a01";
+  renderAll();
+})();
+</script>
+</body>
+</html>
