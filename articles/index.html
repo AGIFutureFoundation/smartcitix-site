@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Articles — SmartCiti.X</title>
+  <meta name="description" content="Long-form articles from SmartCiti.X: immersive training for the union trades, the robotics training pipeline, the manufacturing workforce, the learner journey, and the AR/VR classroom." />
+  <link rel="canonical" href="https://smartcitix.agifuturefoundation.org/articles/index.html" />
+  <meta property="og:title" content="Articles — SmartCiti.X" />
+  <meta property="og:description" content="Long-form articles from SmartCiti.X: immersive training for the union trades, the robotics training pipeline, the manufacturing workforce, the learner journey, and the AR/VR classroom." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://smartcitix.agifuturefoundation.org/articles/index.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Articles — SmartCiti.X" />
+  <meta name="theme-color" content="#0b0e14" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2306b6d4'/%3E%3C/svg%3E" />
+  <style>
+    :root { --accent: #06b6d4; --accent-soft: rgba(6, 182, 212, 0.12); --bg: #0b0e14; --bg-alt: #10141d; --panel: #151a24; --border: rgba(255, 255, 255, 0.08); --text: #e8ecf3; --text-muted: #9aa4b5; --danger: #ff6b6b; --success: #2ecc8f; --radius: 14px; --maxw: 1100px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-header { position: sticky; top: 0; z-index: 50; background: rgba(11, 14, 20, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
+    .brand { font-weight: 700; color: var(--text); font-size: 1.05rem; letter-spacing: 0.01em; }
+    .brand:hover { text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 26px; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.95rem; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .btn { display: inline-block; padding: 12px 24px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; border: 1px solid transparent; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    article.article { max-width: 760px; margin: 0 auto; padding: 64px 24px 40px; }
+    .eyebrow { color: var(--accent); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 14px; }
+    article.article h1 { font-size: clamp(2rem, 4.5vw, 2.9rem); line-height: 1.15; margin-bottom: 10px; }
+    article.article h2.subtitle { font-size: 1.35rem; font-weight: 600; color: var(--text-muted); line-height: 1.35; margin-bottom: 28px; }
+    article.article h2 { font-size: 1.55rem; line-height: 1.3; margin: 44px 0 14px; }
+    article.article p { margin-bottom: 16px; }
+    article.article strong { color: var(--text); }
+    article.article ul, article.article ol { margin: 0 0 16px 0; padding-left: 24px; }
+    article.article li { margin-bottom: 8px; }
+    .status-box { background: rgba(255, 107, 107, 0.08); border: 1px solid rgba(255, 107, 107, 0.45); border-radius: var(--radius); padding: 20px 22px; margin: 0 0 32px 0; }
+    .status-box p { margin-bottom: 0; color: var(--text); }
+    .status-box strong { color: var(--text); }
+    .article-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+    .article-list .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 26px; }
+    .article-list h2 { font-size: 1.25rem; margin: 0 0 6px 0; }
+    .article-list h2 a { color: var(--text); }
+    .article-list h2 a:hover { color: var(--accent); text-decoration: none; }
+    .article-list p { color: var(--text-muted); margin-bottom: 0; }
+    .article-list .meta { color: var(--accent); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .disclaimer { color: var(--text-muted); font-style: italic; font-size: 0.92rem; margin-top: 32px; }
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 0 32px; background: var(--bg-alt); }
+    .footer-inner { display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; }
+    .footer-brand p { color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; max-width: 420px; }
+    .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; align-content: flex-start; }
+    .footer-nav a { color: var(--text-muted); font-size: 0.95rem; }
+    .social-links { display: flex; gap: 18px; }
+    .social-links a { color: var(--text-muted); font-size: 0.95rem; }
+    .family-bar { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .family-bar p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.8; }
+    .footer-bottom { margin-top: 20px; }
+    .footer-bottom p { color: var(--text-muted); font-size: 0.88rem; }
+    @media (max-width: 720px) { .nav-links { display: none; } article.article { padding-top: 44px; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container">
+      <a class="brand" href="https://smartcitix.agifuturefoundation.org/">🏙️ SmartCiti.X</a>
+      <ul class="nav-links">
+        <li><a href="https://smartcitix.agifuturefoundation.org/#academy">The Academy</a></li>
+        <li><a href="https://smartcitix.agifuturefoundation.org/#wilds">The Wilds</a></li>
+        <li><a href="https://smartcitix.agifuturefoundation.org/#stack">Adaptive Stack</a></li>
+        <li><a href="https://smartcitix.agifuturefoundation.org/#explore">Explore</a></li>
+        <li><a href="https://smartcitix.agifuturefoundation.org/#worlds">Worlds</a></li>
+        <li><a href="https://github.com/AGIFutureFoundation/SmartCiti.X" target="_blank" rel="noopener" class="btn btn-primary">GitHub ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+  <article class="article">
+    <p class="eyebrow">SmartCiti.X long-form series · AGI Future Foundation</p>
+    <h1>Articles</h1>
+    <h2 class="subtitle">Long-form writing from the SmartCiti.X Trade Craft Academy</h2>
+    <aside class="status-box">
+      <p><strong>Status — read this first.</strong> SmartCiti.X is W3 Series 10 in the "33 named W3 sub-series in the April 2026 internal list." The proposed issuer is a new, separate corporation, SmartCiti.X, Inc. — a Delaware C-corporation is recommended, Wyoming is the alternative, and whether it is a public benefit corporation or a standard corporation is one choice for counsel. It is <strong>not incorporated, filed, funded, or offered</strong>. Nothing in these articles is a promise that a training programme, cohort, or facility exists today. The learner platform described here is built locally as a demonstration; its scenarios are simulations, not certification, licensure, or apprenticeship hours.</p>
+    </aside>
+    <ul class="article-list">
+      <li class="card">
+        <p class="meta">Article 1 · November 2026</p>
+        <h2><a href="https://smartcitix.agifuturefoundation.org/articles/ar-vr-trades-training.html">What Immersive Practice Can and Cannot Teach — AR/VR Training for the Union Trades</a></h2>
+        <p>A learner puts on a headset, reaches for a virtual panel, and runs a fault-finding exercise that would take a week to set up in a real workshop. What the evidence actually shows — and what no headset can teach.</p>
+      </li>
+      <li class="card">
+        <p class="meta">Article 2 · November 2026</p>
+        <h2><a href="https://smartcitix.agifuturefoundation.org/articles/robotics-training-pipeline.html">From First Simulation to a Real Machine — The Robotics Training Pipeline</a></h2>
+        <p>The hardest job in a modern factory is the one the human does next to the robot. The pipeline that produces that worker, stage by stage, from first simulation to first real machine.</p>
+      </li>
+      <li class="card">
+        <p class="meta">Article 3 · November 2026</p>
+        <h2><a href="https://smartcitix.agifuturefoundation.org/articles/manufacturing-workforce-apprenticeship.html">Building a Manufacturing Workforce — Apprenticeships, Safety, and the Skilled-Trades Gap</a></h2>
+        <p>American manufacturing has a worker problem, layered several deep. The apprenticeship model that has actually solved it before, and what a proposed venture would have to do to help.</p>
+      </li>
+      <li class="card">
+        <p class="meta">Article 4 · November 2026</p>
+        <h2><a href="https://smartcitix.agifuturefoundation.org/articles/learner-journey-six-scenarios.html">One Path, Six Scenarios — The Learner Journey Through the SmartCiti.X Platform</a></h2>
+        <p>Six scenarios, thirty steps, one path: how a learner walks the SmartCiti.X platform from first measurement to the real machine — and where the path ends today.</p>
+      </li>
+      <li class="card">
+        <p class="meta">Article 5 · November 2026</p>
+        <h2><a href="https://smartcitix.agifuturefoundation.org/articles/ar-vr-classroom-union-trades.html">The Coach in the Corner of the Room — Teaching, Safety Culture, and the AR/VR Classroom for the Union Trades</a></h2>
+        <p>The headsets are the least interesting thing in the room. The AR/VR classroom stands or falls on the coach — and on the apprenticeship structure around them.</p>
+      </li>
+    </ul>
+    <p class="disclaimer">Nothing in these articles is legal, tax, or financial advice, and no signing, membership, payment, investment, or offering is made here. SmartCiti.X is proposed, not incorporated, filed, funded, or offered.</p>
+  </article>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="brand">🏙️ SmartCiti.X — Trade Craft Academy</p>
+        <p>Gamified training to enhance robotic and human integrations. Powered by AGI Corp.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="https://smartcitix.agifuturefoundation.org/#academy">The Academy</a><a href="https://smartcitix.agifuturefoundation.org/#wilds">The Wilds</a><a href="https://smartcitix.agifuturefoundation.org/#stack">Adaptive Stack</a><a href="https://smartcitix.agifuturefoundation.org/#explore">Explore</a><a href="https://smartcitix.agifuturefoundation.org/#worlds">Worlds</a>
+      </nav>
+      <div class="social-links">
+        <a href="https://github.com/AGIFutureFoundation/SmartCiti.X" aria-label="GitHub" rel="noopener" target="_blank">GitHub</a>
+        <a href="mailto:academy@agifuturefoundation.org">Email</a>
+        <a href="#" aria-label="X (Twitter)" rel="noopener" target="_blank">X</a>
+        <a href="#" aria-label="YouTube" rel="noopener" target="_blank">YouTube</a>
+      </div>
+    </div>
+    <div class="container family-bar">
+      <p>Part of the <a href="https://agifuturefoundation.org">AGI Future Foundation</a> family · <a href="https://worldforge.agifuturefoundation.org">WorldForge</a> · <a href="https://cognitionx.agifuturefoundation.org">Cognition.X</a> · <a href="https://biodao.agifuturefoundation.org">BioDao</a> · <a href="https://agifellowship.church">AGI Fellowship</a> · <a href="https://agi.lease">AGI Accelerator</a> · <a href="https://bioacoustics.cloud">WAVE</a> · <a href="https://github.com/AGIFutureFoundation">GitHub ↗</a></p>
+    </div>
+    <div class="container footer-bottom"><p>© 2026 AGI Corp · AGI Future Foundation PBC</p></div>
+  </footer>
+</body>
+</html>
