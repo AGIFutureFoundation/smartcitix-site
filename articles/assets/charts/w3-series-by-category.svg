@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420" role="img" aria-label="Bar chart: the 33 named W3 sub-series grouped by the Foundation site's eight article categories">
+  <rect width="760" height="420" fill="#ffffff"/>
+  <text x="30" y="34" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#14202e">The 33 named W3 sub-series, by the site's eight categories</text>
+  <text x="30" y="56" font-family="system-ui, sans-serif" font-size="12.5" fill="#5b6b7d">Counted from the Foundation site's article-category pages. Series only; projects and partner entities excluded.</text>
+  <g font-family="system-ui, sans-serif" font-size="13" fill="#14202e">
+    <text x="30" y="96">Intelligence &amp; Mind</text><rect x="250" y="82" width="108" height="20" fill="#0b1e3a"/><text x="368" y="97">3</text>
+    <text x="30" y="131">Health &amp; Life Sciences</text><rect x="250" y="117" width="360" height="20" fill="#0e7c7b"/><text x="620" y="132">10</text>
+    <text x="30" y="166">Metaverse &amp; Spatial</text><rect x="250" y="152" width="108" height="20" fill="#0b1e3a"/><text x="368" y="167">3</text>
+    <text x="30" y="201">Robotics &amp; Physical AI</text><rect x="250" y="187" width="108" height="20" fill="#0e7c7b"/><text x="368" y="202">3</text>
+    <text x="30" y="236">Governance &amp; Law</text><rect x="250" y="222" width="108" height="20" fill="#0b1e3a"/><text x="368" y="237">3</text>
+    <text x="30" y="271">Finance &amp; the Studio</text><rect x="250" y="257" width="36" height="20" fill="#0e7c7b"/><text x="296" y="272">1</text>
+    <text x="30" y="306">Cities, Energy &amp; Infrastructure</text><rect x="250" y="292" width="108" height="20" fill="#0b1e3a"/><text x="368" y="307">3</text>
+    <text x="30" y="341">Community, Learning &amp; Culture</text><rect x="250" y="327" width="252" height="20" fill="#0e7c7b"/><text x="512" y="342">7</text>
+  </g>
+  <text x="30" y="380" font-family="system-ui, sans-serif" font-size="11" fill="#5b6b7d">Source: Foundation site category pages (category-1 to category-8), counting W3 series only. Total: 33.</text>
+  <text x="30" y="396" font-family="system-ui, sans-serif" font-size="11" fill="#5b6b7d">SmartCiti.X (S10) sits in Cities, Energy &amp; Infrastructure (3 series). All 33 series are intended/planned,</text>
+  <text x="30" y="412" font-family="system-ui, sans-serif" font-size="11" fill="#5b6b7d">not formed, funded, or offered.</text>
+</svg>

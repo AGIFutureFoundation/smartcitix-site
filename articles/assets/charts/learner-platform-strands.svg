@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="480" viewBox="0 0 760 480" role="img" aria-label="Bar chart: how many of the six SmartCiti.X learner scenarios teach each skill strand">
+  <rect width="760" height="480" fill="#ffffff"/>
+  <text x="30" y="34" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#14202e">Skill strands across the six learner scenarios</text>
+  <text x="30" y="56" font-family="system-ui, sans-serif" font-size="12.5" fill="#5b6b7d">Count of scenarios (of 6) that teach each strand. Safety and procedure appear in every scenario.</text>
+  <g font-family="system-ui, sans-serif" font-size="13" fill="#14202e">
+    <text x="30" y="96">Safety</text><rect x="150" y="82" width="480" height="20" fill="#0b1e3a"/><text x="640" y="97">6</text>
+    <text x="30" y="131">Procedure</text><rect x="150" y="117" width="480" height="20" fill="#0b1e3a"/><text x="640" y="132">6</text>
+    <text x="30" y="166">Tools</text><rect x="150" y="152" width="160" height="20" fill="#0e7c7b"/><text x="320" y="167">2</text>
+    <text x="30" y="201">Machines</text><rect x="150" y="187" width="160" height="20" fill="#0e7c7b"/><text x="320" y="202">2</text>
+    <text x="30" y="236">Coordination</text><rect x="150" y="222" width="160" height="20" fill="#0e7c7b"/><text x="320" y="237">2</text>
+    <text x="30" y="271">Documentation</text><rect x="150" y="257" width="160" height="20" fill="#0e7c7b"/><text x="320" y="272">2</text>
+    <text x="30" y="306">Materials</text><rect x="150" y="292" width="80" height="20" fill="#c9a227"/><text x="240" y="307">1</text>
+    <text x="30" y="341">Layout</text><rect x="150" y="327" width="80" height="20" fill="#c9a227"/><text x="240" y="342">1</text>
+    <text x="30" y="376">Troubleshooting</text><rect x="150" y="362" width="80" height="20" fill="#c9a227"/><text x="240" y="377">1</text>
+    <text x="30" y="411">Inspection</text><rect x="150" y="397" width="2" height="20" fill="#c9a227"/><text x="165" y="412">0</text>
+    <text x="30" y="446">Leadership</text><rect x="150" y="432" width="2" height="20" fill="#c9a227"/><text x="165" y="447">0</text>
+  </g>
+  <text x="30" y="472" font-family="system-ui, sans-serif" font-size="11" fill="#5b6b7d">Source: SmartCiti.X learner platform, scenarios/scenarios.json (6 scenarios, 5 steps each = 30 steps), verified by scenarios/verify.mjs. 11 registry strands; inspection and leadership have no scenario yet.</text>
+</svg>
